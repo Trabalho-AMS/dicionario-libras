@@ -3,12 +3,19 @@
 Trabalho final da disciplina **AMS0002 – Análise e Modelagem de Sistemas**
 (Prof.ª Carla Diacui Medeiros Berkenbrock).
 
-**Equipe:** Gabriel Lima e Eduardo Pasqualeto
-
 O sistema expande o [Dicionário de Libras do INES](https://www.ines.gov.br/dicionario-de-libras/) para permitir
 criar, alterar e excluir todos os campos de um verbete, registrar variações regionais de um mesmo sinal
 (ex.: "Pai" no padrão nacional, no RJ e no RS) e enviar o vídeo do sinal. Toda contribuição passa por um
 curador antes de ser publicada.
+
+## Equipe
+
+| Integrante | GitHub | Responsável por |
+|---|---|---|
+| Gabriel Lima | [@GabrielLima2803](https://github.com/GabrielLima2803) | Proposta de Arquitetura, repositório e documentação |
+| Eduardo Pasqualeto | [@edupasqualeto](https://github.com/edupasqualeto) | Engenharia de Requisitos e diagramas UML |
+
+O descritivo completo das atividades de cada membro está em [docs/05-equipe.md](docs/05-equipe.md).
 
 ## Sumário
 
@@ -46,11 +53,11 @@ curador antes de ser publicada.
 
 ## Critérios de avaliação
 
-| Etapa | Pontuação | Onde está |
-|---|---|---|
-| 1. Engenharia de Requisitos | 3,0 | [docs/02-engenharia-de-requisitos.md](docs/02-engenharia-de-requisitos.md) |
-| 2. Modelagem de Software | 2,0 | [docs/03-modelagem](docs/03-modelagem/README.md) |
-| 3. Projeto de Software | 1,0 | [docs/04-arquitetura.md](docs/04-arquitetura.md) |
-| 4. Repositório e Documentação | 1,0 | este README + [docs/05-equipe.md](docs/05-equipe.md) |
-| 5. Código em funcionamento | 2,0 | repositório do protótipo |
-| 6. Participação em palestra | 1,0 | 24/11/2026 às 13:30 |
+| Etapa | Pontuação | Onde está | Situação |
+|---|---|---|---|
+| 1. Engenharia de Requisitos | 3,0 | [docs/02-engenharia-de-requisitos.md](docs/02-engenharia-de-requisitos.md) | ✅ Concluída |
+| 2. Modelagem de Software | 2,0 | [docs/03-modelagem](docs/03-modelagem/README.md) | 🚧 Em andamento |
+| 3. Projeto de Software | 1,0 | [docs/04-arquitetura.md](docs/04-arquitetura.md) | ✅ Concluída |
+| 4. Repositório e Documentação | 1,0 | este README + [docs/05-equipe.md](docs/05-equipe.md) | ✅ Concluída |
+| 5. Código em funcionamento | 2,0 | repositório do protótipo | 🚧 Em andamento |
+| 6. Participação em palestra | 1,0 | 24/11/2026 às 13:30 | ⏳ Agendada |

@@ -1,5 +1,7 @@
 # Modelagem de Software (UML)
 
+> Responsável: Eduardo Pasqualeto ([@edupasqualeto](https://github.com/edupasqualeto))
+
 Diagramas UML do **fluxo de aprovação de um novo sinal com vídeo**, conforme a etapa 2.2 do
 [enunciado](../01-enunciado.md).
 
