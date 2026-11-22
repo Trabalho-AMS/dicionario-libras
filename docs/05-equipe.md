@@ -6,4 +6,4 @@
 | Integrante | GitHub | Atividades realizadas |
 |---|---|---|
 | Gabriel Lima | [@GabrielLima2803](https://github.com/GabrielLima2803) | _descrever_ |
-| Eduardo Pasqualeto | _@usuario_ | _descrever_ |
+| Eduardo Pasqualeto | [@edupasqualeto](https://github.com/edupasqualeto) | _descrever_ |
