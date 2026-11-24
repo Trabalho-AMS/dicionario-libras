@@ -18,7 +18,7 @@
 | 2. Modelagem de Software (UML) | Eduardo Pasqualeto | [03-modelagem/](03-modelagem/README.md) |
 | 3. Projeto de Software (arquitetura) | Gabriel Lima | [04-arquitetura.md](04-arquitetura.md) |
 | 4. Repositório e documentação | Gabriel Lima | [README.md](../README.md) e esta página |
-| 5. Código em funcionamento (protótipo) | _a definir_ | _a adicionar_ |
+| 5. Código em funcionamento (protótipo) | Gabriel Lima e Eduardo Pasqualeto (em conjunto) | [backend](https://github.com/Trabalho-AMS/dicionario-libras-backend) e [frontend](https://github.com/Trabalho-AMS/dicionario-libras-frontend) |
 
 ## Descritivo de atividades
 
@@ -30,6 +30,8 @@
 - **Repositório e documentação:** criação da organização [Trabalho-AMS](https://github.com/Trabalho-AMS) e deste
   repositório; estruturação do README e da pasta `docs/`; conversão dos documentos PDF para Markdown;
   templates de issue e pull request.
+- **Código em funcionamento (em conjunto com Eduardo):** implementação do protótipo do fluxo de submissão e
+  aprovação de um novo sinal, no backend em Java + Spring Boot e no frontend em Vue 3 + TypeScript.
 
 ### Eduardo Pasqualeto
 - **Engenharia de Requisitos:** levantamento dos tipos de usuário e das histórias de usuário; requisitos
@@ -38,3 +40,5 @@
   Submeter e aprovar novo sinal com vídeo.
 - **Modelagem de Software (UML):** diagramas de Classes, Sequência e Atividades do fluxo de aprovação de um novo
   sinal com vídeo.
+- **Código em funcionamento (em conjunto com Gabriel):** implementação do protótipo do fluxo de submissão e
+  aprovação de um novo sinal, no backend em Java + Spring Boot e no frontend em Vue 3 + TypeScript.

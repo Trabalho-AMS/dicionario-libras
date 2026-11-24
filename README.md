@@ -12,8 +12,8 @@ curador antes de ser publicada.
 
 | Integrante | GitHub | Responsável por |
 |---|---|---|
-| Gabriel Lima | [@GabrielLima2803](https://github.com/GabrielLima2803) | Proposta de Arquitetura, repositório e documentação |
-| Eduardo Pasqualeto | [@edupasqualeto](https://github.com/edupasqualeto) | Engenharia de Requisitos e diagramas UML |
+| Gabriel Lima | [@GabrielLima2803](https://github.com/GabrielLima2803) | Proposta de Arquitetura, repositório, documentação e código (em conjunto) |
+| Eduardo Pasqualeto | [@edupasqualeto](https://github.com/edupasqualeto) | Engenharia de Requisitos, diagramas UML e código (em conjunto) |
 
 O descritivo completo das atividades de cada membro está em [docs/05-equipe.md](docs/05-equipe.md).
 
@@ -26,6 +26,7 @@ O descritivo completo das atividades de cada membro está em [docs/05-equipe.md]
    - Acessibilidade (WCAG 2.2 AA) e LGPD
    - Caso de uso UC01 – Submeter e aprovar novo sinal com vídeo
 3. [Modelagem de Software (UML)](docs/03-modelagem/README.md)
+   - Diagramas de Classes, Sequência e Atividades do fluxo de aprovação de um novo sinal
 4. [Projeto de Software – Proposta de Arquitetura](docs/04-arquitetura.md)
 5. [Equipe e atividades por membro](docs/05-equipe.md)
 
@@ -45,19 +46,27 @@ O descritivo completo das atividades de cada membro está em [docs/05-equipe.md]
 └── .github/                      # templates de issue e pull request
 ```
 
+## Código do protótipo
+
+| Repositório | Stack |
+|---|---|
+| [dicionario-libras-backend](https://github.com/Trabalho-AMS/dicionario-libras-backend) | Java 17 + Spring Boot (monólito modular) |
+| [dicionario-libras-frontend](https://github.com/Trabalho-AMS/dicionario-libras-frontend) | Vue 3 + TypeScript (SPA) |
+
 ## Documentos originais (PDF)
 
 - [Enunciado do trabalho final](docs/pdf/enunciado-trabalho-final.pdf)
 - [Engenharia de Requisitos](docs/pdf/engenharia-de-requisitos.pdf)
 - [Proposta de Arquitetura](docs/pdf/proposta-de-arquitetura.pdf)
+- [Diagramas UML](docs/pdf/diagramas-uml.pdf)
 
 ## Critérios de avaliação
 
 | Etapa | Pontuação | Onde está | Situação |
 |---|---|---|---|
 | 1. Engenharia de Requisitos | 3,0 | [docs/02-engenharia-de-requisitos.md](docs/02-engenharia-de-requisitos.md) | ✅ Concluída |
-| 2. Modelagem de Software | 2,0 | [docs/03-modelagem](docs/03-modelagem/README.md) | 🚧 Em andamento |
+| 2. Modelagem de Software | 2,0 | [docs/03-modelagem](docs/03-modelagem/README.md) | ✅ Concluída |
 | 3. Projeto de Software | 1,0 | [docs/04-arquitetura.md](docs/04-arquitetura.md) | ✅ Concluída |
 | 4. Repositório e Documentação | 1,0 | este README + [docs/05-equipe.md](docs/05-equipe.md) | ✅ Concluída |
-| 5. Código em funcionamento | 2,0 | repositório do protótipo | 🚧 Em andamento |
+| 5. Código em funcionamento | 2,0 | [backend](https://github.com/Trabalho-AMS/dicionario-libras-backend) e [frontend](https://github.com/Trabalho-AMS/dicionario-libras-frontend) | 🚧 Em andamento |
 | 6. Participação em palestra | 1,0 | 24/11/2026 às 13:30 | ⏳ Agendada |
