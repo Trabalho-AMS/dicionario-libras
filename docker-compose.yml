@@ -1,0 +1,66 @@
+# Sobe o sistema completo: banco, bucket S3, backend e frontend.
+# Requer os repositórios backend e frontend clonados ao lado deste (ver README).
+#
+#   docker compose up --build
+#
+# Frontend: http://localhost:3000 · API: http://localhost:8080 · Swagger: http://localhost:8080/swagger-ui.html
+name: dicionario-libras
+
+services:
+  postgres:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: dicionario_libras
+      POSTGRES_USER: dicionario
+      POSTGRES_PASSWORD: dicionario
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dicionario -d dicionario_libras"]
+      interval: 5s
+      retries: 10
+
+  # Armazenamento de objetos compatível com S3 (vídeos e termos de consentimento)
+  s3:
+    image: chrislusf/seaweedfs:4.55
+    command: server -dir=/data -s3 -s3.port=8333 -s3.config=/etc/seaweedfs/s3.json
+    ports:
+      - "8333:8333"
+    volumes:
+      - s3data:/data
+      - ../dicionario-libras-backend/docker/s3.json:/etc/seaweedfs/s3.json:ro
+
+  backend:
+    build: ../dicionario-libras-backend
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/dicionario_libras
+      DB_USER: dicionario
+      DB_PASSWORD: dicionario
+      S3_ENDPOINT: http://s3:8333
+      # Os links dos vídeos são abertos pelo navegador, que enxerga o bucket em localhost
+      S3_PUBLIC_ENDPOINT: http://localhost:8333
+      S3_ACCESS_KEY: dicionario
+      S3_SECRET_KEY: dicionario123
+      CORS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost:5173
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      s3:
+        condition: service_started
+    # O bucket pode demorar alguns segundos para aceitar conexões na primeira subida
+    restart: on-failure
+
+  frontend:
+    build: ../dicionario-libras-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  pgdata:
+  s3data:

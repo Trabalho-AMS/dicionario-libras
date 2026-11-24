@@ -21,6 +21,34 @@ O descritivo completo das atividades de cada membro está em [docs/05-equipe.md]
 
 Roteiro da apresentação para a professora, seguindo os critérios de avaliação: **[apresentacao.md](apresentacao.md)**
 
+## Como rodar o sistema completo (Docker)
+
+O `docker-compose.yml` deste repositório sobe tudo de uma vez: banco PostgreSQL, bucket S3, backend e frontend.
+Requer apenas o Docker. Clone os três repositórios lado a lado:
+
+```bash
+git clone https://github.com/Trabalho-AMS/dicionario-libras.git
+git clone https://github.com/Trabalho-AMS/dicionario-libras-backend.git
+git clone https://github.com/Trabalho-AMS/dicionario-libras-frontend.git
+
+cd dicionario-libras
+docker compose up --build
+```
+
+| Serviço | Endereço |
+|---|---|
+| Frontend | http://localhost:3000 |
+| API | http://localhost:8080/api/status |
+| Swagger | http://localhost:8080/swagger-ui.html |
+| PostgreSQL | `localhost:5433` (`dicionario` / `dicionario`) |
+| Bucket S3 | http://localhost:8333 |
+
+O frontend (Nginx) repassa as chamadas de `/api` para o backend. Para parar: `docker compose down`;
+para apagar também os dados: `docker compose down -v`.
+
+> Se o banco e o bucket do `docker-compose.yml` do backend estiverem rodando, pare-os antes
+> (`docker compose down` na pasta do backend), porque usam as mesmas portas.
+
 ## Sumário
 
 1. [Enunciado do trabalho](docs/01-enunciado.md)
@@ -40,6 +68,7 @@ Roteiro da apresentação para a professora, seguindo os critérios de avaliaç�
 .
 ├── README.md
 ├── apresentacao.md              # roteiro da apresentação
+├── docker-compose.yml           # sobe o sistema completo
 ├── docs/
 │   ├── 01-enunciado.md
 │   ├── 02-engenharia-de-requisitos.md
