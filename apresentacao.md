@@ -10,44 +10,98 @@ Repositórios: [documentação](https://github.com/Trabalho-AMS/dicionario-libra
 ## O problema
 
 O [Dicionário de Libras do INES](https://www.ines.gov.br/dicionario-de-libras/) só permite consultar. A expansão
-permite **inserir, alterar e excluir** verbetes, registrar **variações regionais** do mesmo sinal e **enviar o
-vídeo** do sinal. Toda contribuição passa por um **curador** antes de ser publicada.
+permite **inserir, alterar e excluir** verbetes, registrar **variações regionais** do mesmo sinal (ex.: "Pai" no
+padrão nacional, no RJ e no RS) e **enviar o vídeo** do sinal. Toda contribuição passa por um **curador
+linguístico** antes de ser publicada.
 
 ## 1. Engenharia de Requisitos
 
 [Documento completo](docs/02-engenharia-de-requisitos.md)
 
-- **Usuários:** Visitante (consulta), Colaborador (envia sinais), Curador linguístico (aprova) e Administrador.
-  Cada um tem suas histórias de usuário.
-- **Requisitos funcionais:** os pedidos do enunciado viraram RF02 (CRUD do verbete), RF03 (variação regional) e
-  RF04 (vídeo de até 30 s e 50 MB). Diferenciais: busca por parâmetros da Libras, mapa de variações, gravação
-  pela webcam e player para aprender.
-- **Não-funcionais com métricas:** busca em até 1 s com 50 usuários, vídeo tocando em até 2 s, nota ≥ 95 no
-  Lighthouse, 0 falhas críticas no OWASP ZAP, 99,5% de uptime e cobertura de testes ≥ 70%.
-- **WCAG 2.2 AA:** o público é surdo, então nada depende de áudio; contraste 4,5:1, navegação por teclado e
-  descrição textual ao lado de cada vídeo.
-- **LGPD:** o vídeo identifica a pessoa, então é tratado como dado sensível. Exige termo de consentimento
-  (e do responsável, se menor de 18). Rejeitado: vídeo apagado em 30 dias. Consentimento revogado: sai do ar
-  em 24 h.
-- **Caso de uso UC01:** submeter e aprovar novo sinal com vídeo.
+### Usuários e histórias
+
+| Perfil | História principal |
+|---|---|
+| Visitante | Quero buscar uma palavra e filtrar por região, para aprender o sinal usado onde moro. |
+| Colaborador | Quero enviar um novo sinal com vídeo e acompanhar o status, para incluir um termo que falta. |
+| Curador linguístico | Quero aprovar, pedir ajuste ou rejeitar com justificativa, para garantir a qualidade. |
+| Administrador | Quero gerenciar perfis e tabelas de apoio, para manter o sistema padronizado. |
+
+### Requisitos funcionais
+
+Os três pedidos do enunciado viraram requisitos de prioridade alta:
+
+- **RF02:** inserir, alterar e excluir todos os campos do verbete.
+- **RF03:** vários sinais por verbete: um padrão nacional e variações ligadas a uma região.
+- **RF04:** enviar vídeo do sinal (MP4/WebM, até 50 MB e 30 s).
+
+Os demais cobrem busca (RF01), curadoria (RF05 e RF06), consentimento (RF07), notificação (RF08), histórico
+(RF09) e administração (RF10). Como **diferenciais**, propomos busca pelos parâmetros da Libras (RF11), mapa
+de variações regionais (RF12), gravação pela webcam (RF13) e um player para aprender, com câmera lenta e
+espelhamento (RF14).
+
+### Requisitos não-funcionais e métricas
+
+| Requisito | Métrica |
+|---|---|
+| Desempenho da busca | Até 1 s com 50 usuários simultâneos |
+| Carregamento do vídeo | Começa a tocar em até 2 s (10 Mbps) |
+| Acessibilidade | WCAG 2.2 AA; nota ≥ 95 no Lighthouse |
+| Usabilidade | 90% enviam um sinal sem ajuda em até 5 min |
+| Segurança | HTTPS, senhas com hash, 0 falhas críticas no OWASP ZAP |
+| Disponibilidade | 99,5% de uptime mensal |
+| Manutenibilidade | Cobertura de testes ≥ 70% nas regras de negócio |
+
+### WCAG e LGPD
+
+**Acessibilidade:** o público principal é surdo, então nada depende de áudio. Texto alternativo nas imagens,
+descrição textual ao lado de cada vídeo, contraste mínimo de 4,5:1, navegação por teclado e mensagens de erro
+que dizem como corrigir. Verificação com axe DevTools e Lighthouse.
+
+**LGPD:** o vídeo mostra rosto e expressões e identifica a pessoa, então é **tratado como dado sensível**.
+
+| Dado | Política |
+|---|---|
+| Vídeo do sinalizante | Só é aceito com termo de consentimento (data, versão e quem aceitou); pode ser revogado |
+| Vídeo de menor de 18 anos | Exige consentimento do responsável legal (art. 14) |
+| Submissão rejeitada | Vídeo apagado em 30 dias |
+| Consentimento revogado | Vídeo sai do ar em 24 h e é excluído em até 15 dias |
+
+### Caso de uso UC01 – Submeter e aprovar novo sinal com vídeo
 
 ![Caso de uso UC01](docs/assets/uc01-casos-de-uso.png)
+
+1. O colaborador informa a palavra, preenche o verbete, a região e envia o vídeo.
+2. O sistema valida o vídeo e o colaborador aceita o termo de consentimento.
+3. A submissão fica "Em análise" na fila do curador.
+4. O curador assiste ao vídeo e aprova; o sinal é publicado e o colaborador é notificado.
+
+**Alternativos:** se a palavra já existe, o sistema sugere enviar como variação regional; ajuste ou rejeição
+exigem justificativa; vídeo inválido mostra o motivo sem perder os dados preenchidos.
 
 ## 2. Modelagem de Software (UML)
 
 [Documento completo](docs/03-modelagem/README.md) · Os três diagramas modelam o fluxo de aprovação do UC01.
 
-**Classes:** a `Submissao` liga autor, curador, consentimento e sinal. Um `Verbete` tem vários `Sinal`; sem
-`Regiao`, é o padrão nacional.
+### Classes
+
+A `Submissao` é a classe central: liga autor, curador, consentimento e o sinal proposto. Um `Verbete` tem
+vários `Sinal`; sem `Regiao`, o sinal é o padrão nacional. A regra "o curador não aprova a própria
+submissão" fica em `aprovar(curador)`.
 
 ![Diagrama de Classes](docs/03-modelagem/classes.png)
 
-**Sequência:** o colaborador envia; o curador decide. Ao aprovar, o evento `SubmissaoAprovada` aciona mídia,
-dicionário e notificações.
+### Sequência
+
+O colaborador envia o sinal e, depois, o curador decide. Ao aprovar, o módulo de submissões publica o evento
+`SubmissaoAprovada`, e os módulos de mídia, dicionário e notificações reagem sem serem chamados diretamente.
 
 ![Diagrama de Sequência](docs/03-modelagem/sequencia.png)
 
-**Atividades:** raias de colaborador, sistema e curador. Ajuste e rejeição exigem justificativa.
+### Atividades
+
+Raias separam colaborador, sistema e curador. Na aprovação, publicar, converter o vídeo e notificar acontecem
+em paralelo. Na rejeição, o vídeo é agendado para exclusão em 30 dias.
 
 ![Diagrama de Atividades](docs/03-modelagem/atividades.png)
 
@@ -56,29 +110,43 @@ dicionário e notificações.
 [Documento completo](docs/04-arquitetura.md)
 
 **Três camadas**, com SPA no frontend e **monólito modular** no backend: um único processo dividido em 7
-módulos (identidade, dicionário, submissões, mídia, privacidade, notificações e auditoria).
+módulos independentes (identidade, dicionário, submissões, mídia, privacidade, notificações e auditoria), cada
+um com as camadas `http`, `aplicacao`, `dominio` e `infra`.
 
 ![Arquitetura](docs/assets/arquitetura-visao-geral.png)
 
-**Por quê:** microsserviços seriam caros demais para uma equipe pequena; módulos isolados evitam o código
-bagunçado; eventos desacoplam os módulos; e, se o vídeo virar gargalo, o módulo de mídia pode virar
-microsserviço sem reescrever o resto.
+**Justificativa:**
+
+- **Microsserviços seriam caros demais agora:** rede, deploy e transações distribuídas não compensam para uma
+  equipe pequena.
+- **Módulos isolados:** um módulo só usa outro pela interface pública e nunca acessa tabelas alheias.
+- **Eventos desacoplam:** a aprovação avisa os interessados sem um módulo chamar todos os outros.
+- **Pronto para crescer:** se o vídeo virar gargalo, o módulo de mídia vira microsserviço sem reescrever o resto.
 
 ## 4. Repositório e equipe
 
 | Integrante | Atividades |
 |---|---|
-| Gabriel Lima | Arquitetura, repositório e documentação, código (em conjunto) |
-| Eduardo Pasqualeto | Requisitos, diagramas UML, código (em conjunto) |
+| Gabriel Lima | Proposta de arquitetura, repositório e documentação, código (em conjunto) |
+| Eduardo Pasqualeto | Engenharia de requisitos, diagramas UML, código (em conjunto) |
 
 Descritivo completo em [docs/05-equipe.md](docs/05-equipe.md).
 
 ## 5. Código em funcionamento
 
-**Backend:** Java 17 + Spring Boot, PostgreSQL e bucket S3 no Docker. **Frontend:** Vue 3 + TypeScript.
+| Camada | Tecnologias |
+|---|---|
+| Backend | Java 17, Spring Boot, Flyway, PostgreSQL e bucket S3 (Docker) |
+| Frontend | Vue 3, TypeScript, Vue Router, Pinia, PrimeVue |
 
-O código segue o diagrama de classes e a arquitetura: as regras do UC01 estão em `Submissao`, `Video` e
-`Consentimento`, cobertas por testes.
+O código segue o diagrama de classes e a arquitetura. As principais regras do UC01:
+
+| Classe | Regra | Requisito |
+|---|---|---|
+| `Video.validar()` | MP4/WebM, até 30 s e 50 MB | RF04 |
+| `Consentimento.ehValido()` | Termo aceito, não revogado e, se menor, termo do responsável | RF07, LGPD |
+| `Submissao.aprovar()` | Só curador aprova, nunca a própria submissão | RF06 |
+| `Submissao.rejeitar()` | Exige justificativa | RF06 |
 
 ```bash
 # backend
