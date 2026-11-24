@@ -40,14 +40,14 @@ docker compose up --build
 | Frontend | http://localhost:3000 |
 | API | http://localhost:8080/api/status |
 | Swagger | http://localhost:8080/swagger-ui.html |
-| PostgreSQL | `localhost:5433` (`dicionario` / `dicionario`) |
-| Bucket S3 | http://localhost:8333 |
+| PostgreSQL | `localhost:5434` (`dicionario` / `dicionario`) |
+| Bucket S3 | http://localhost:8334 |
 
 O frontend (Nginx) repassa as chamadas de `/api` para o backend. Para parar: `docker compose down`;
 para apagar também os dados: `docker compose down -v`.
 
-> Se o banco e o bucket do `docker-compose.yml` do backend estiverem rodando, pare-os antes
-> (`docker compose down` na pasta do backend), porque usam as mesmas portas.
+> O banco e o bucket usam as portas 5434 e 8334, então podem rodar junto com o `docker-compose.yml` do backend
+> (5433 e 8333). Só a porta 8080 é compartilhada: pare o backend local (`./mvnw spring-boot:run`) antes de subir.
 
 ## Sumário
 

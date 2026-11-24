@@ -13,8 +13,9 @@ services:
       POSTGRES_DB: dicionario_libras
       POSTGRES_USER: dicionario
       POSTGRES_PASSWORD: dicionario
+    # Porta 5434 para não conflitar com o banco do compose do backend (5433)
     ports:
-      - "5433:5432"
+      - "5434:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -26,8 +27,9 @@ services:
   s3:
     image: chrislusf/seaweedfs:4.55
     command: server -dir=/data -s3 -s3.port=8333 -s3.config=/etc/seaweedfs/s3.json
+    # Porta 8334 no host para não conflitar com o bucket do compose do backend (8333)
     ports:
-      - "8333:8333"
+      - "8334:8333"
     volumes:
       - s3data:/data
       - ../dicionario-libras-backend/docker/s3.json:/etc/seaweedfs/s3.json:ro
@@ -40,7 +42,7 @@ services:
       DB_PASSWORD: dicionario
       S3_ENDPOINT: http://s3:8333
       # Os links dos vídeos são abertos pelo navegador, que enxerga o bucket em localhost
-      S3_PUBLIC_ENDPOINT: http://localhost:8333
+      S3_PUBLIC_ENDPOINT: http://localhost:8334
       S3_ACCESS_KEY: dicionario
       S3_SECRET_KEY: dicionario123
       CORS_ALLOWED_ORIGINS: http://localhost:3000,http://localhost:5173
