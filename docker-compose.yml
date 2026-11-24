@@ -57,7 +57,11 @@ services:
     restart: on-failure
 
   frontend:
-    build: ../dicionario-libras-frontend
+    build:
+      context: ../dicionario-libras-frontend
+      args:
+        # Chave da licença PrimeUI: crie um arquivo .env nesta pasta com VITE_PRIMEUI_LICENSE=...
+        VITE_PRIMEUI_LICENSE: ${VITE_PRIMEUI_LICENSE:-}
     ports:
       - "3000:80"
     depends_on:
