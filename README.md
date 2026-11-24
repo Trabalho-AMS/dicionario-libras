@@ -17,6 +17,10 @@ curador antes de ser publicada.
 
 O descritivo completo das atividades de cada membro está em [docs/05-equipe.md](docs/05-equipe.md).
 
+## Apresentação
+
+Roteiro da apresentação para a professora, seguindo os critérios de avaliação: **[apresentacao.md](apresentacao.md)**
+
 ## Sumário
 
 1. [Enunciado do trabalho](docs/01-enunciado.md)
@@ -35,6 +39,7 @@ O descritivo completo das atividades de cada membro está em [docs/05-equipe.md]
 ```
 .
 ├── README.md
+├── apresentacao.md              # roteiro da apresentação
 ├── docs/
 │   ├── 01-enunciado.md
 │   ├── 02-engenharia-de-requisitos.md
