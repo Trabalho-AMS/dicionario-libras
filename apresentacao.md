@@ -139,18 +139,17 @@ Descritivo completo em [docs/05-equipe.md](docs/05-equipe.md).
 | Backend | Java 17, Spring Boot, Flyway, PostgreSQL e bucket S3 (Docker) |
 | Frontend | Vue 3, TypeScript, Vue Router, Pinia, PrimeVue |
 
-O código segue o diagrama de classes e a arquitetura. As principais regras do UC01:
+O protótipo faz o **CRUD das submissões com upload do vídeo** (passos 1 a 4 do UC01), seguindo a estrutura
+modular da arquitetura: só o módulo `submissoes` está implementado e os outros estão criados vazios.
 
-| Classe | Regra | Requisito |
+| Operação | No site | Regra aplicada |
 |---|---|---|
-| `Video.validar()` | MP4/WebM, até 30 s e 50 MB | RF04 |
-| `Consentimento.ehValido()` | Termo aceito, não revogado e, se menor, termo do responsável | RF07, LGPD |
-| `Submissao.aprovar()` | Só curador aprova, nunca a própria submissão | RF06 |
-| `Submissao.rejeitar()` | Exige justificativa | RF06 |
+| Criar | Enviar sinal | Vídeo MP4/WebM, até 30 s e 50 MB (RF04); aceite do termo e, se menor, termo do responsável (RF07, LGPD) |
+| Listar e ver | Minhas submissões | Detalhe com o vídeo, servido do bucket por link temporário |
+| Editar | Editar submissão | O vídeo é opcional; se trocado, o antigo é apagado |
+| Excluir | Minhas submissões | Apaga também o vídeo e o termo do bucket (LGPD) |
 
 ```bash
-# backend
-docker compose up -d && ./mvnw spring-boot:run   # http://localhost:8080
-# frontend
-npm install && npm run dev                       # http://localhost:5173
+# sistema completo (banco, bucket, backend e frontend)
+cd dicionario-libras && docker compose up --build   # http://localhost:3000
 ```
