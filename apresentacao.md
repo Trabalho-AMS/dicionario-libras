@@ -123,7 +123,7 @@ Cada módulo tem as mesmas quatro pastas:
 flowchart TB
     http["<b>http</b><br/>Recebe as requisições da API<br/><i>SubmissaoController</i>"]
     aplicacao["<b>aplicacao</b><br/>Casos de uso: o que o sistema faz<br/><i>SubmissaoService</i>"]
-    infra["<b>infra</b><br/>Banco de dados e bucket de arquivos<br/><i>SubmissaoRepository, S3ArmazenamentoDeArquivos</i>"]
+    infra["<b>infra</b><br/>Banco de dados e bucket de arquivos<br/><i>Repositories, S3ArmazenamentoDeArquivos</i>"]
     dominio["<b>dominio</b><br/>Classes do diagrama UML e regras de negócio<br/><i>Submissao, Sinal, Verbete, Video, Consentimento</i>"]
 
     http -->|"chama o caso de uso"| aplicacao
@@ -132,20 +132,32 @@ flowchart TB
     infra -->|"grava e lê as classes"| dominio
 ```
 
-| Pasta | O que significa | O que tem no módulo `submissoes` | Usa |
-|---|---|---|---|
-| `http` | Porta de entrada: recebe a requisição, valida o formato dos dados e devolve a resposta em JSON. Não tem regra de negócio. | `SubmissaoController`, `FormularioSubmissao` | `aplicacao` |
-| `aplicacao` | Casos de uso: coordena os passos de cada operação (criar, listar, alterar, excluir), usando as classes do domínio e os repositories. | `SubmissaoService`, `NovaSubmissao`, `SubmissaoResposta` | `dominio` e `infra` |
-| `dominio` | Coração do módulo: as classes do diagrama UML com seus atributos e regras de negócio. Não depende de nenhuma outra pasta. | `Submissao`, `Sinal`, `Verbete`, `Video`, `Consentimento`, `Regiao`, `ConfiguracaoMao`, `Assunto`, `StatusSubmissao` | nenhuma |
-| `infra` | Detalhes técnicos: repositories (PostgreSQL com JPA) e o armazenamento dos vídeos no bucket S3. | `SubmissaoRepository`, `VerbeteRepository`, `RegiaoRepository`, `AssuntoRepository`, `ConfiguracaoMaoRepository`, `S3ArmazenamentoDeArquivos` | `dominio` |
+| Pasta | O que significa | Usa |
+|---|---|---|
+| `http` | Porta de entrada: recebe a requisição, valida o formato dos dados e devolve a resposta em JSON. Não tem regra de negócio. | `aplicacao` |
+| `aplicacao` | Casos de uso: coordena os passos de cada operação (criar, listar, alterar, excluir), usando as classes do domínio e os repositories. | `dominio` e `infra` |
+| `dominio` | Coração do módulo: as classes do diagrama UML com seus atributos e regras de negócio. Não depende de nenhuma outra pasta. | nenhuma |
+| `infra` | Detalhes técnicos: repositories (PostgreSQL com JPA) e o armazenamento dos vídeos no bucket S3. | `dominio` |
+
+O protótipo implementa só o CRUD de submissões, então só existem os módulos e as pastas que ele usa:
+
+| Módulo | `http` | `aplicacao` | `dominio` | `infra` |
+|---|---|---|---|---|
+| `submissoes` | `SubmissaoController` | `SubmissaoService` | `Submissao`, `StatusSubmissao` | `SubmissaoRepository` |
+| `dicionario` | — | — | `Verbete`, `Sinal`, `Regiao`, `ConfiguracaoMao`, `Assunto` | `VerbeteRepository`, `RegiaoRepository`, `AssuntoRepository`, `ConfiguracaoMaoRepository` |
+| `midia` | — | — | `Video` | `S3ArmazenamentoDeArquivos` (bucket) |
+| `privacidade` | — | — | `Consentimento` | — |
+
+O `SubmissaoService` coordena o CRUD usando as classes e os repositories dos outros módulos. `identidade`,
+`notificacoes` e `auditoria` entram quando houver login, e-mails e registro de ações.
 
 **Regra:** as setas mostram quem pode usar quem. O `http` só conversa com a `aplicacao`, nunca acessa o banco
 ou as classes do domínio direto. O `dominio` não depende de ninguém: as regras não sabem que existe banco,
 bucket ou API. A regra é verificada automaticamente pelo teste `CamadasTest` do backend.
 
 **Exemplo, enviar um sinal:** `SubmissaoController` recebe o formulário → `SubmissaoService.criar()` →
-`Video.validar()` e `Consentimento.ehValido()` conferem as regras → `Verbete.adicionarSinal()` →
-`SubmissaoRepository` grava no PostgreSQL e o vídeo vai para o bucket.
+`Video.validar()` (mídia) e `Consentimento.ehValido()` (privacidade) conferem as regras →
+`Verbete.adicionarSinal()` (dicionário) → `SubmissaoRepository` grava no PostgreSQL e o vídeo vai para o bucket.
 
 **Justificativa:**
 
