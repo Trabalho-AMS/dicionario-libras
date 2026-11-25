@@ -33,14 +33,40 @@ cada um dono das suas regras e dos seus dados.
 | `notificacoes` | E-mails ao usuário |
 | `auditoria` | Registro das ações |
 
-Cada módulo tem as mesmas camadas internas:
+### Camadas de cada módulo
 
-| Camada | Conteúdo |
-|---|---|
-| `http` | Rotas |
-| `aplicacao` | Casos de uso |
-| `dominio` | Regras de negócio |
-| `infra` | Banco e arquivos |
+Cada módulo tem as mesmas quatro pastas, uma abaixo da outra:
+
+```mermaid
+flowchart TB
+    http["<b>http</b><br/>Recebe as requisições da API<br/><i>SubmissaoController</i>"]
+    aplicacao["<b>aplicacao</b><br/>Casos de uso: o que o sistema faz<br/><i>SubmissaoService</i>"]
+    dominio["<b>dominio</b><br/>Regras de negócio e interfaces<br/><i>Submissao, SubmissaoRepository</i>"]
+    infra["<b>infra</b><br/>Banco de dados e bucket de arquivos<br/><i>SubmissaoRepositoryJpa, S3ArmazenamentoDeArquivos</i>"]
+
+    http ---|"chama o caso de uso"| aplicacao
+    aplicacao ---|"usa as entidades e as interfaces"| dominio
+    dominio ---|"interfaces implementadas por"| infra
+```
+
+| Pasta | O que significa | O que tem no módulo `submissoes` | Fala só com |
+|---|---|---|---|
+| `http` | Porta de entrada: recebe a requisição, valida o formato dos dados e devolve a resposta em JSON. Não tem regra de negócio. | `SubmissaoController`, `FormularioSubmissao` | `aplicacao` |
+| `aplicacao` | Casos de uso: coordena os passos de cada operação (criar, listar, alterar, excluir), chamando o domínio. | `SubmissaoService`, `NovaSubmissao`, `SubmissaoResposta` | `http` (acima) e `dominio` (abaixo) |
+| `dominio` | Coração do módulo: entidades e regras de negócio, e as interfaces do que ele precisa de fora (banco e arquivos). Não depende de nenhuma tecnologia. | `Submissao` (regras do vídeo e do consentimento), `SubmissaoRepository`, `ArmazenamentoDeArquivos` | `aplicacao` (acima) e `infra` (abaixo) |
+| `infra` | Detalhes técnicos: implementa as interfaces do domínio com PostgreSQL (JPA) e o bucket S3. | `SubmissaoRepositoryJpa`, `S3ArmazenamentoDeArquivos` | `dominio` |
+
+**Regra:** cada pasta fala **somente com a vizinha de cima ou de baixo**. O `http` nunca acessa o domínio
+ou o banco direto, e a `aplicacao` não conhece o PostgreSQL nem o S3: ela usa as interfaces do domínio, e a
+`infra` as implementa. Assim dá para trocar o banco ou o armazenamento sem mexer nas regras. A regra é
+verificada automaticamente pelo teste `CamadasTest` do backend.
+
+**Exemplo, enviar um sinal:** `SubmissaoController` recebe o formulário → `SubmissaoService.criar()` →
+`Submissao` valida o vídeo e o consentimento → `SubmissaoRepository.salvar()` → `SubmissaoRepositoryJpa`
+grava no PostgreSQL.
+
+O pacote `compartilhado` fica fora dessa regra: tem só configuração comum (CORS, Swagger) e o tratamento de
+erros usado por todos os módulos.
 
 ## 4. Frontend
 SPA organizada por páginas — busca, verbete, enviar sinal, minhas submissões, curadoria e administração — com
