@@ -140,7 +140,7 @@ Descritivo completo em [docs/05-equipe.md](docs/05-equipe.md).
 | Frontend | Vue 3, TypeScript, Vue Router, Pinia, PrimeVue |
 
 O protótipo faz o **CRUD das submissões com upload do vídeo** (passos 1 a 4 do UC01), seguindo a estrutura
-modular da arquitetura: só o módulo `submissoes` está implementado e os outros estão criados vazios.
+modular da arquitetura: o backend tem o módulo `submissoes`, com as camadas `http`, `aplicacao`, `dominio` e `infra`.
 
 | Operação | No site | Regra aplicada |
 |---|---|---|
