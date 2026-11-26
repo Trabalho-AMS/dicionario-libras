@@ -139,26 +139,6 @@ flowchart TB
 | `dominio` | Coração do módulo: as classes do diagrama UML com seus atributos e regras de negócio. Não depende de nenhuma outra pasta. | nenhuma |
 | `infra` | Detalhes técnicos: repositories (PostgreSQL com JPA) e o armazenamento dos vídeos no bucket S3. | `dominio` |
 
-O protótipo implementa só o CRUD de submissões, então só existem os módulos e as pastas que ele usa:
-
-| Módulo | `http` | `aplicacao` | `dominio` | `infra` |
-|---|---|---|---|---|
-| `submissoes` | `SubmissaoController` | `SubmissaoService` | `Submissao`, `StatusSubmissao` | `SubmissaoRepository` |
-| `dicionario` | — | — | `Verbete`, `Sinal`, `Regiao`, `ConfiguracaoMao`, `Assunto` | `VerbeteRepository`, `RegiaoRepository`, `AssuntoRepository`, `ConfiguracaoMaoRepository` |
-| `midia` | — | — | `Video` | `S3ArmazenamentoDeArquivos` (bucket) |
-| `privacidade` | — | — | `Consentimento` | — |
-
-O `SubmissaoService` coordena o CRUD usando as classes e os repositories dos outros módulos. `identidade`,
-`notificacoes` e `auditoria` entram quando houver login, e-mails e registro de ações.
-
-**Regra:** as setas mostram quem pode usar quem. O `http` só conversa com a `aplicacao`, nunca acessa o banco
-ou as classes do domínio direto. O `dominio` não depende de ninguém: as regras não sabem que existe banco,
-bucket ou API. A regra é verificada automaticamente pelo teste `CamadasTest` do backend.
-
-**Exemplo, enviar um sinal:** `SubmissaoController` recebe o formulário → `SubmissaoService.criar()` →
-`Video.validar()` (mídia) e `Consentimento.ehValido()` (privacidade) conferem as regras →
-`Verbete.adicionarSinal()` (dicionário) → `SubmissaoRepository` grava no PostgreSQL e o vídeo vai para o bucket.
-
 **Justificativa:**
 
 - **Microsserviços seriam caros demais agora:** rede, deploy e transações distribuídas não compensam para uma
