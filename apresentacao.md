@@ -162,18 +162,3 @@ Descritivo completo em [docs/05-equipe.md](docs/05-equipe.md).
 |---|---|
 | Backend | Java 17, Spring Boot, Flyway, PostgreSQL e bucket S3 (Docker) |
 | Frontend | Vue 3, TypeScript, Vue Router, Pinia, PrimeVue |
-
-O protótipo faz o **CRUD das submissões com upload do vídeo** (passos 1 a 4 do UC01), seguindo a estrutura
-modular da arquitetura: o backend tem o módulo `submissoes`, com as camadas `http`, `aplicacao`, `dominio` e `infra`.
-
-| Operação | No site | Regra aplicada |
-|---|---|---|
-| Criar | Enviar sinal | Vídeo MP4/WebM, até 30 s e 50 MB (RF04); aceite do termo e, se menor, termo do responsável (RF07, LGPD) |
-| Listar e ver | Minhas submissões | Detalhe com o vídeo, servido do bucket por link temporário |
-| Editar | Editar submissão | O vídeo é opcional; se trocado, o antigo é apagado |
-| Excluir | Minhas submissões | Apaga também o vídeo e o termo do bucket (LGPD) |
-
-```bash
-# sistema completo (banco, bucket, backend e frontend)
-cd dicionario-libras && docker compose up --build   # http://localhost:3000
-```
